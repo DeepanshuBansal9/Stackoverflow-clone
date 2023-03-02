@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
+import {useDispatch } from  'react-redux'
+import {useNavigate} from 'react-router-dom'
 import './Auth.css'
 import icon from '../../assets/logo.png'
 import AboutAuth from './AboutAuth'
+import {signup,login} from '../../actions/auth'
 const Auth = () => {
 
  const  [isSignup, setIsSignup]= useState(false)  
@@ -9,16 +12,31 @@ const Auth = () => {
  const [email,setEmail]=useState('')
  const [password, setPassword] = useState('')
   
+ const dispatch =useDispatch()
+ const navigate =useNavigate()
+
  const handleSwitch=() =>{
   setIsSignup(!isSignup)
  }
 
-   const handleSubmit = (e)=>{
-    e.PreventDefault()
-   console.log("hi how are you");
-    console.log({name,email,password})
-   }
-
+ const handleSubmit = (e) => {
+  e.preventDefault();
+  if(!email && !password)
+  {
+    alert('Enter email and password')
+  }
+  if(isSignup){
+    if(!name)
+    {
+     alert("Enter a name to continue")
+    }
+    dispatch(signup({name,email,password},navigate))
+  } 
+else{
+  dispatch(login({email,password},navigate))
+    }
+   
+}
   return (
     <section className='auth-section'>
     {isSignup && <AboutAuth />}

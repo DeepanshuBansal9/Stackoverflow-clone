@@ -1,12 +1,13 @@
 import jwt from 'jsonwebtoken'
-import bcrypt from 'bcrypt'
-import users from '../models/auth.js'
+import bcrypt from 'bcryptjs'
+import users from '../Models/auth.js'
 
 export const signup =async(req,res)=>{
 const {name,email,password}=req.body;
 try{
   const existinguser =await users.findOne({email});
   if(existinguser){
+    console.log(existinguser);
     return res.status(404).json({message: "user already Exist."})
   }
 
@@ -15,6 +16,7 @@ try{
   const token= jwt.sign({email: newUser.email,id:newUser._id},"test",{expiresIn:'1h'});
   res.status(200).json({result: newUser,token})
 }catch (error){
+  console.log(error);
     res.status(500).json("Something went wrong...")
 }
 }
